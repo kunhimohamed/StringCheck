@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Aventus machine test</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+	<form id="the_string_form" method="POST" action="">
+		{% csrf_token %}
+		{% for field in form %}
+			<label>{{ field.label }}</label>
+			{{field}}</br>
+		{% endfor %}
+		<br/><input type="submit" value="Submit">
+	</form>	
+	<p id="error_msg" style="display: none;color: red">* Error on server</p>
+	<br/><br/>
+	<div id="string_check_result_div" style="display: none;">
+	  <head><b>Result</b></head>
+	  <p>****************</p>	
+	  <table id="string_check_result">
+	    <thead>
+		    <tr>
+		      <th>Strings</th>
+		      <th>Status</th>
+		    </tr>
+	    </thead>
+	    <tbody>
+	    </tbody>
+	  </table>
+	</div>	
+</body>
+<script type="text/javascript">
+
+	$('#the_string_form').on('submit', function(event){
+	    event.preventDefault();
+	    $("#error_msg").hide();
+	    $('#string_check_result tbody tr').remove();
+	    $("#string_check_result_div").hide();
+	    $.ajax({
+	            url : "", // the endpoint
+	            type : "POST", // http method
+	            data : { "strings" : JSON.stringify({
+	            "master_string": $("#id_master_string").val(), 
+	            "string_1": $("#id_string_1").val(),
+	            "string_2": $("#id_string_2").val(),
+	            "string_3": $("#id_string_3").val(),
+	            "string_4": $("#id_string_4").val(),
+	            }), 'csrfmiddlewaretoken': '{{ csrf_token }}' }, // data sent with the post request
+
+	            // handle a successful response
+	            success : function(data) {
+	            	console.log(data)
+	            	if(data["status"] == "success") {
+	            		for(let each in data["result"]){
+	            			$('#string_check_result tbody').append('<tr>\
+	            				<td>'+each+'</td>\
+	            				<td>'+data['result'][each]+'</td>\
+	            				</tr>');
+	            		}
+	            		$("#string_check_result_div").show();
+	            	}
+	            	else {
+	            		$("#error_msg").show();
+	            	}
+	            }
+	    });        
+	});
+	
+	
+
+</script>
+</html>
