@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Aventus machine test</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+	<label>Master String</label>
+		<input type="text" name="master_string" id="master_string"/><br/>
+	<label>String 1</label>
+		<input type="text" name="string_1"/ id="string_1"/><br/>
+	<label>String 2</label>
+		<input type="text" name="string_2" id="string_2"/><br/>
+	<label>String 3</label>
+		<input type="text" name="string_3" id="string_3"/><br/>
+	<label>String 4</label>
+		<input type="text" name="string_4" id="string_4"/><br/><br/>
+	<p id="error_msg" style="display:none;color: red">*All fields required</p>	
+	<button id="submit" onClick="validation_and_send()">Submit</button><br/>
+	<br/><br/>
+	<div id="string_check_result_div" style="display: none;">
+	  <head><b>Result</b></head>
+	  <p>****************</p>	
+	  <table id="string_check_result">
+	    <thead>
+		    <tr>
+		      <th>Strings</th>
+		      <th>Status</th>
+		    </tr>
+	    </thead>
+	    <tbody>
+	    </tbody>
+	  </table>
+	</div>	
+</body>
+<script type="text/javascript">
+	
+	function validation_and_send() {
+		console.log("here we go");
+		if(($("#master_string").val() == "") || ($("#string_2").val() == "") || ($("#string_3").val() == "") || ($("#string_4").val() == "")){
+			$("#error_msg").show();
+		}
+		else{
+			$("#error_msg").hide();
+			$('#string_check_result tbody tr').remove();
+			$("#string_check_result_div").hide();
+			$.ajax({
+			      type: "POST",
+			      url: "",
+			      data: {
+			      	'master_string': $("#master_string").val(),
+			        'string_1': $("#string_1").val(),
+			        'string_2': $("#string_2").val(),
+			        'string_3': $("#string_3").val(),
+			        'string_4': $("#string_4").val(),
+			        'csrfmiddlewaretoken': '{{ csrf_token }}' // from form
+			      },
+			      success: function (data) {
+			      	console.log(data)
+			      	if(data["status"] == "success") {
+			      		for(let each in data["result"]){
+			      			console.log(each);
+			      			$('#string_check_result tbody').append('<tr>\
+			      				<td>'+each+'</td>\
+			      				<td>'+data['result'][each]+'</td>\
+			      				</tr>');
+			      		}
+			      		$("#string_check_result_div").show();
+			      	}
+			      	
+			      }
+			    });
+		}
+		
+		
+	}
+
+</script>
+</html>
