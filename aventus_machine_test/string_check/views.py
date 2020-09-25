@@ -1,12 +1,10 @@
+
 import json
 from django.http import JsonResponse
 from django.shortcuts import render
 from .forms import SimpleForm
-from urllib.parse import parse_qs
-# import urlparse
 
 def index(request):
-	print(request.method)
 	if request.method == 'GET':
 		form = SimpleForm()
 		return render(request, 'string_check/index.html', {"form": form})
@@ -40,6 +38,6 @@ def index(request):
 						result_dict_string[each_str] = "no"
 				return JsonResponse({"result":result_dict_string, "status": "success"})
 			else:
-				return JsonResponse({"reason":"form not valid", "status": "not valid"})	
+				return JsonResponse({"reason":"form not valid", "status": "not valid"})
 		except Exception as e:
 			return JsonResponse({"reason":str(e), "status": "not success"})		
