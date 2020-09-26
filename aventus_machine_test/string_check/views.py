@@ -14,11 +14,11 @@ def index(request):
 			form = SimpleForm(strings_req)
 
 			if form.is_valid():
-				master_string = form.cleaned_data['master_string']
-				string_1 = form.cleaned_data['string_1']
-				string_2 = form.cleaned_data['string_2']
-				string_3 = form.cleaned_data['string_3']
-				string_4 = form.cleaned_data['string_4']
+				master_string = form.cleaned_data['master_string'].lower()
+				string_1 = form.cleaned_data['string_1'].lower()
+				string_2 = form.cleaned_data['string_2'].lower()
+				string_3 = form.cleaned_data['string_3'].lower()
+				string_4 = form.cleaned_data['string_4'].lower()
 				
 				master_str_list = list(master_string)
 				stings_list = [string_1, string_2, string_3, string_4]
